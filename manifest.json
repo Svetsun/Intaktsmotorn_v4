@@ -1,7 +1,7 @@
 {
   "version": 1,
   "locale": "en_US",
-  "platform": "4.5.0",
+  "platform": "4.5.3",
   "metadata": {
     "appmode": "shiny",
     "primary_rmd": null,
@@ -2370,29 +2370,35 @@
     }
   },
   "files": {
+    ".Rprofile": {
+      "checksum": "16ae76c59e5697a0c797d45acc8b7e55"
+    },
     "app.R": {
-      "checksum": "89b3d69a8d4b93a21b326eb7a9c5b3f3"
+      "checksum": "cb65a569c1f9c5a623bdbaf5c913c616"
     },
     "data/Base_data.xlsx": {
-      "checksum": "45a25d41a3b29a4e2de44b95277d4368"
+      "checksum": "310e407f1bdc7a6567e57e8a849bc85b"
+    },
+    "data/Base_data_backup_1774620075.xlsx": {
+      "checksum": "c68a2807e8942264005b888bafa16a03"
     },
     "R/config.R": {
-      "checksum": "07d354706b5ffbe70289c6cb2439c80a"
+      "checksum": "d9be49270eaeb90bb7d73fedb7bc038c"
     },
     "R/helpers_core.R": {
-      "checksum": "d8c928447515941987e3ad9d3ed40845"
+      "checksum": "d9420f6f0950d28309ddc7a7a4d170a8"
     },
     "R/helpers_display.R": {
       "checksum": "17e5cbe0356cafa57b4f1e8de73381e6"
     },
     "R/helpers_ensure.R": {
-      "checksum": "885889983c3777bbece9cfcd8eb70688"
+      "checksum": "8bd45aecfb32385466750c389884ea5b"
     },
     "R/helpers_history.R": {
       "checksum": "d77f71ac34e52efb2cfd99b00bcbd28c"
     },
     "R/helpers_hot.R": {
-      "checksum": "245615d23758744552d4d69951a6209a"
+      "checksum": "cf6d0f071236c9863fec842f25ee3575"
     },
     "R/helpers_ids_labels.R": {
       "checksum": "ade2f7c0155261a2a41211bd3a8d3c2d"
@@ -2401,25 +2407,28 @@
       "checksum": "117f3c937862e1887a0f613800be0d2c"
     },
     "R/interval_report.R": {
-      "checksum": "6cd66941b0ef9c0a724fedd5c4af79aa"
+      "checksum": "24587fd1443c888f151d4d8167882afa"
     },
     "R/server.R": {
-      "checksum": "bab7641d26ca3d7a42e14f1dc0cddb1c"
+      "checksum": "d800fb761e229a74834acdfc3377e184"
     },
     "R/server_add_handlers.R": {
-      "checksum": "9dd915395e6d826c2725daa8d1a854d9"
+      "checksum": "e48480e7349a38b6dbd6dee3f866995a"
+    },
+    "R/server_bonus_report.R": {
+      "checksum": "4df84303ca905d6e5d69c15acdd3bf5b"
     },
     "R/server_refresh.R": {
       "checksum": "a0d7a606e41e47492ffb8fe5b87f29a6"
     },
     "R/ui.R": {
-      "checksum": "4a4b7b55959051a3817fa76ffb53b3a4"
+      "checksum": "2770bedd590d46da3273f9f240e8039c"
     },
     "README.md": {
       "checksum": "37db55aa3351ab36c801d6c4119d8e0f"
     },
     "renv.lock": {
-      "checksum": "9e0ce5762922952fe9c526a115f48948"
+      "checksum": "82ad0776eda8c55957eee733390846ec"
     }
   },
   "users": null
