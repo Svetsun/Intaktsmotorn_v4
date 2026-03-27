@@ -944,4 +944,53 @@ server <- function(input, output, session) {
     
     showNotification("Sparat ALLT + backup (inkl historik).", type="message", duration=3)
   })
+
+  # ===================== AVSLUTA (EXIT) =====================
+
+  observeEvent(input$btn_avsluta, {
+    showModal(modalDialog(
+      title = "Avsluta applikationen",
+      "Är du säker på att du vill spara alla ändringar och avsluta applikationen?",
+      easyClose = TRUE,
+      footer = tagList(
+        modalButton("Avbryt"),
+        actionButton("confirm_avsluta", "Spara och avsluta", class = "btn-danger")
+      )
+    ))
+  })
+
+  observeEvent(input$confirm_avsluta, {
+    removeModal()
+    req(rv$wb)
+
+    reg <- save_registry()
+    for (sheet_name in names(reg)) {
+      try({
+        if (!is.null(reg[[sheet_name]]$hot)) {
+          save_sheet(sheet_name, with_write = FALSE, with_notify = FALSE)
+        }
+      }, silent = TRUE)
+    }
+
+    for (nm in c(
+      "Konsulter","Maklare","Kunder","Uppdrag","Uppgift","Tidrapportering",
+      "FaktureringInformation","GrundlonHistory","BonusHistory",
+      "GroupBonusHistory","SalesBonusHistory","TimprisHistory","ArbetstimmarGrund",
+      "BonusRapportering"
+    )) rv$snap[[nm]] <- rv$wb[[nm]]
+
+    if (!isTRUE(write_wb_to_disk(with_backup = TRUE))) {
+      showNotification(
+        "Sparandet misslyckades \u2014 applikationen avslutas INTE. Kontrollera att Excel-filen inte \u00e4r \u00f6ppen i ett annat program.",
+        type = "error", duration = 10
+      )
+      return()
+    }
+
+    showNotification("Alla \u00e4ndringar sparade och backup skapad. Appen avslutas...", type = "message", duration = 3)
+    session$onFlushed(function() {
+      Sys.sleep(1)
+      stopApp()
+    }, once = TRUE)
+  })
 }

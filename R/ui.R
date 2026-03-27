@@ -9,7 +9,9 @@ ui <- fluidPage(
     class = "topbar",
     tags$div(class = "title", "Master redigerbar"),
     tags$div(class = "mid", actionButton("btn_save_all", "Spara Alla ändringar", class = "btn-success")),
-    tags$div("")
+    tags$div(
+      actionButton("btn_avsluta", "Avsluta", icon = icon("power-off"), class = "btn-danger")
+    )
   ),
   
   tabsetPanel(
