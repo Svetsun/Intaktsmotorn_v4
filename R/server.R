@@ -1,4 +1,34 @@
 server <- function(input, output, session) {
+
+  # ===================== AUTENTISERING =====================
+  # secure_server() validates every session against the credentials database.
+  # DB_PATH and PASSPHRASE are globals defined in app.R before this is sourced.
+  # res_auth is a reactive list — available anywhere in this server function.
+  res_auth <- secure_server(
+    check_credentials = check_credentials(DB_PATH, passphrase = PASSPHRASE)
+  )
+
+  # Display the logged-in user's name and username in the topbar.
+  output$ui_logged_in_user <- renderUI({
+    req(res_auth$user)
+    name     <- res_auth$name %||% res_auth$user   # name may be NULL for older DBs
+    username <- res_auth$user
+    role     <- res_auth$role %||% ""
+    tags$span(
+      style = "font-size:13px; color:#555; white-space:nowrap;",
+      icon("user-circle"), " ",
+      tags$strong(name),
+      tags$span(style = "color:#aaa;", paste0(" (", username, ")")),
+      if (nzchar(role)) tags$span(
+        style = "margin-left:6px; padding:2px 7px; border-radius:10px;
+                 background:#eaf0fb; color:#2c7be5; font-size:11px;",
+        role
+      )
+    )
+  })
+
+  # ===================== REACTIVE VALUES =====================
+
   rv <- reactiveValues(
     wb = NULL,
     labels = NULL,

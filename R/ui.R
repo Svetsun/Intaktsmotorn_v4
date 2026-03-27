@@ -8,8 +8,10 @@ ui <- fluidPage(
   tags$div(
     class = "topbar",
     tags$div(class = "title", "Master redigerbar"),
-    tags$div(class = "mid", actionButton("btn_save_all", "Spara Alla ändringar", class = "btn-success")),
+    tags$div(class = "mid", actionButton("btn_save_all", "Spara Alla \u00e4ndringar", class = "btn-success")),
     tags$div(
+      style = "display:flex; align-items:center; gap:12px;",
+      uiOutput("ui_logged_in_user"),
       actionButton("btn_avsluta", "Avsluta", icon = icon("power-off"), class = "btn-danger")
     )
   ),
