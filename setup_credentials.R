@@ -24,7 +24,7 @@ library(shinymanager)
 # ---------------------------------------------------------------------------
 PASSPHRASE <- Sys.getenv(
   "SHINYMANAGER_PASSPHRASE",
-  unset = "Intaktsmotorn-S3kret-2025!"   # <-- change before production
+  unset = "Intaktsmotorn042026!"   # <-- change before production
 )
 
 if (nchar(PASSPHRASE) < 12) {
@@ -56,13 +56,13 @@ if (file.exists(DB_PATH)) {
 #   admin       — TRUE grants access to the shinymanager admin panel
 # ---------------------------------------------------------------------------
 credentials <- data.frame(
-  user     = c("admin",          "svetlana",       "anvandare"),
-  password = c("Admin@2025!",    "Roban@2025!",    "User@2025!"),
-  name     = c("Administrator",  "Svetlana",       "Standardanvändare"),
-  role     = c("admin",          "admin",          "user"),
-  start    = c(NA,               NA,               NA),
-  expire   = c(NA,               NA,               NA),
-  admin    = c(TRUE,             TRUE,             FALSE),
+  user     = c("admin",           "svetlana",            "robert"),
+  password = c("REPLACE_ME",      "REPLACE_ME",          "REPLACE_ME"),
+  name     = c("Administrator",   "Svetlana",            "Standardanv\u00e4ndare"),
+  role     = c("admin",           "admin",               "user"),
+  start    = c(NA,                NA,                    NA),
+  expire   = c(NA,                NA,                    NA),
+  admin    = c(TRUE,              TRUE,                  FALSE),
   stringsAsFactors = FALSE
 )
 
