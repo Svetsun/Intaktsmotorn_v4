@@ -44,7 +44,7 @@ source("R/helpers_display.R",      local = environment(), encoding = "UTF-8")
 #   Posit Cloud:         Settings → Environment Variables
 PASSPHRASE <- Sys.getenv(
   "SHINYMANAGER_PASSPHRASE",
-  unset = "Intaktsmotorn-S3kret-2025!"   # local dev fallback only
+  unset = "Intaktsmotorn042026!"   # local dev fallback only
 )
 
 # Path to the encrypted SQLite credentials database.
@@ -87,7 +87,7 @@ source("R/ui.R", encoding = "UTF-8")
 # secure_app() intercepts every session until the user authenticates.
 ui <- secure_app(
   ui,
-  enable_admin = TRUE,   # adds ?admin=true management panel for admin users
+  enable_admin = FALSE,   # adds ?admin=true management panel for admin users
   tags_top = tags$div(
     style = "text-align:center; padding:20px 0 10px;",
     tags$h3(style = "color:#2c3e50; font-weight:600;", "Intaktsmotorn"),

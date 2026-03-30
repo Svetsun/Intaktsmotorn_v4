@@ -11,7 +11,7 @@ server <- function(input, output, session) {
   # Display the logged-in user's name and username in the topbar.
   output$ui_logged_in_user <- renderUI({
     req(res_auth$user)
-    name     <- res_auth$name %||% res_auth$user   # name may be NULL for older DBs
+    name     <- res_auth$name %||% res_auth$user
     username <- res_auth$user
     role     <- res_auth$role %||% ""
     tags$span(

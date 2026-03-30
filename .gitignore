@@ -31,7 +31,7 @@ output/
 # OS files
 .DS_Store
 Thumbs.db
-# shinymanager — contains hashed passwords and secrets, never commit
+
 
 .Renviron
 
