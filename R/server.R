@@ -36,6 +36,7 @@ server <- function(input, output, session) {
     interval_report = NULL,
     interval_month_keys = NULL,
     irep_include_bonus = TRUE,
+    irep_consultant_filter = NULL,
     tid_task_lookup = NULL,
     startup_backup_done = FALSE
   )
@@ -353,7 +354,8 @@ server <- function(input, output, session) {
       bonus_threshold   = BONUS_THRESHOLD,
       consultant_filter = consultant_filter
     )
-    rv$irep_include_bonus <- is.null(consultant_filter)
+    rv$irep_include_bonus      <- is.null(consultant_filter)
+    rv$irep_consultant_filter  <- consultant_filter
 
     # Register one pair of renderers per month key (YYYYMM string).
     # Using local() captures mk by value so each closure refers to its own month.
@@ -471,7 +473,22 @@ server <- function(input, output, session) {
     },
     content = function(file) {
       req(rv$interval_report)
-      writexl::write_xlsx(interval_report_workbook_list(rv$interval_report, include_bonus = isTRUE(rv$irep_include_bonus)), path = file)
+      report <- rv$interval_report
+      cf     <- rv$irep_consultant_filter
+      if (!is.null(cf) && length(cf) > 0) {
+        kons_lbl <- rv$labels$kons
+        kons_lbl$consultant_id <- as.character(kons_lbl$consultant_id)
+        keep <- kons_lbl[kons_lbl$consultant_id %in% as.character(cf), , drop = FALSE]
+        keep_key <- paste(as.character(keep$fornamn), as.character(keep$efternamn))
+        filter_by_name <- function(df) {
+          if (nrow(df) == 0 || !all(c("fornamn","efternamn") %in% names(df))) return(df)
+          df[paste(df$fornamn, df$efternamn) %in% keep_key, , drop = FALSE]
+        }
+        report$detail  <- filter_by_name(report$detail)
+        report$summary <- filter_by_name(report$summary)
+        report$totals  <- filter_by_name(report$totals)
+      }
+      writexl::write_xlsx(interval_report_workbook_list(report, include_bonus = isTRUE(rv$irep_include_bonus)), path = file)
     }
   )
 

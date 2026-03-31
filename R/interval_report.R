@@ -666,6 +666,23 @@ build_interval_report <- function(wb, labels,
   } # end consultant_filter else-branch
   # --------------------------------------------------------------------------
 
+  # Safety filter: guarantee detail/summary/totals only contain the requested
+  # consultants, regardless of whether the earlier tid filter fully propagated.
+  if (!is.null(consultant_filter) && length(consultant_filter) > 0) {
+    keep_ids <- as.character(consultant_filter)
+    kf       <- kons_names[as.character(kons_names$consultant_id) %in% keep_ids,
+                            , drop = FALSE]
+    keep_key <- paste(as.character(kf$fornamn), as.character(kf$efternamn))
+    filter_by_kons <- function(df) {
+      if (nrow(df) == 0 || !all(c("fornamn", "efternamn") %in% names(df))) return(df)
+      df[paste(as.character(df$fornamn), as.character(df$efternamn)) %in% keep_key,
+         , drop = FALSE]
+    }
+    detail_all  <- filter_by_kons(detail_all)
+    summary_all <- filter_by_kons(summary_all)
+    totals      <- filter_by_kons(totals)
+  }
+
   list(detail = detail_all, summary = summary_all, totals = totals,
        monthly_grand_summaries = monthly_grand_summaries,       # [+]
        arb_hours_by_month  = arb_hours_list,
