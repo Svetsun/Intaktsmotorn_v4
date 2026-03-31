@@ -2,6 +2,19 @@
 # Central configuration for the Roban Shiny app.
 # All environment-specific constants live here.
 # Source this file at the top of app.R.
+# NOTE: sourced without local=, so all variables land in .GlobalEnv.
+
+# ---- Autentisering -------------------------------------------------------
+# Sourced without local= so DB_PATH and PASSPHRASE land in .GlobalEnv,
+# making them visible to shinymanager's observer when it re-evaluates
+# check_credentials(DB_PATH, passphrase = PASSPHRASE) via rlang::enexpr.
+DB_PATH <- "credentials.sqlite"
+
+PASSPHRASE <- Sys.getenv(
+  "SHINYMANAGER_PASSPHRASE",
+  unset = "Intaktsmotorn042026!"   # local dev fallback only
+)
+# --------------------------------------------------------------------------
 
 # Path to the Excel workbook used as the data store.
 # Relative to the app working directory (project root when launched via shiny::runApp).

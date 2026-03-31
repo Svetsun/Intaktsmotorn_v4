@@ -267,7 +267,8 @@ resolve_sales_bonus_for_month <- function(sales_bonus_history, konsulter_df,
 build_interval_report <- function(wb, labels,
                                    start_year, start_month,
                                    end_year,   end_month,
-                                   bonus_threshold = BONUS_THRESHOLD) {
+                                   bonus_threshold = BONUS_THRESHOLD,
+                                   consultant_filter = NULL) {
 
   start_year  <- as.integer(start_year)
   start_month <- as.integer(start_month)
@@ -367,6 +368,10 @@ build_interval_report <- function(wb, labels,
     customer_id   = as.character(customer_id),
     timmar        = suppressWarnings(as.numeric(timmar))
   )
+
+  if (!is.null(consultant_filter) && length(consultant_filter) > 0) {
+    tid <- tid[tid$consultant_id %in% as.character(consultant_filter), , drop = FALSE]
+  }
 
   kons_names <- kons |>
     mutate(consultant_id = as.character(consultant_id),
@@ -562,6 +567,12 @@ build_interval_report <- function(wb, labels,
                snitt_debiteringsgrad_monad = numeric(0), stringsAsFactors = FALSE)
 
   # ---- BonusRapportering summaries ----------------------------------------
+  # Skipped when consultant_filter is active (bonus is only meaningful for all consultants).
+  if (!is.null(consultant_filter) && length(consultant_filter) > 0) {
+    group_bonus_summary <- empty_bonus_summary()
+    sales_bonus_summary <- empty_bonus_summary()
+  } else {
+
   # Build one row per registered bonus entry that falls inside the interval.
   # period_date = start_date of the registration (already stored as the 1st of the month).
 
@@ -651,6 +662,8 @@ build_interval_report <- function(wb, labels,
     group_bonus_summary <- empty_bonus_summary()
     sales_bonus_summary <- empty_bonus_summary()
   }
+
+  } # end consultant_filter else-branch
   # --------------------------------------------------------------------------
 
   list(detail = detail_all, summary = summary_all, totals = totals,
@@ -661,13 +674,16 @@ build_interval_report <- function(wb, labels,
 }
 
 # Wraps all output tables for write_xlsx.
-interval_report_workbook_list <- function(report) {
-  list(
-    Detalj           = report$detail,
-    Sammanfattning   = report$summary,
-    Totalt           = report$totals,
-    `MånadsTotal`    = report$monthly_grand_summaries,
-    GroupBonusTotal  = report$group_bonus_summary,
-    SalesBonusTotal  = report$sales_bonus_summary
+interval_report_workbook_list <- function(report, include_bonus = TRUE) {
+  out <- list(
+    Detalj         = report$detail,
+    Sammanfattning = report$summary,
+    Totalt         = report$totals,
+    `MånadsTotal`  = report$monthly_grand_summaries
   )
+  if (include_bonus) {
+    out$GroupBonusTotal <- report$group_bonus_summary
+    out$SalesBonusTotal <- report$sales_bonus_summary
+  }
+  out
 }

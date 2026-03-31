@@ -260,6 +260,27 @@ ui <- fluidPage(
           "Bonustr\u00f6skel till\u00e4mpas per m\u00e5nad."
         ))
       ),
+      wellPanel(
+        h5("Filtrering av konsulter"),
+        radioButtons("irep_filter_mode", label = NULL,
+          choices = c(
+            "Alla konsulter"      = "all",
+            "V\u00e4lj en konsult"     = "one",
+            "V\u00e4lj flera konsulter" = "many"
+          ),
+          selected = "all"
+        ),
+        conditionalPanel(
+          condition = "input.irep_filter_mode == 'one'",
+          selectInput("irep_filter_one", "Konsult",
+            choices = c("L\u00e4ser in..." = ""), selected = "")
+        ),
+        conditionalPanel(
+          condition = "input.irep_filter_mode == 'many'",
+          selectInput("irep_filter_many", "Konsulter",
+            choices = c("L\u00e4ser in..." = ""), selected = "", multiple = TRUE)
+        )
+      ),
       tags$hr(),
       uiOutput("irep_monthly_sections"),
       tags$hr(),

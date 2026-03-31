@@ -35,6 +35,7 @@ server <- function(input, output, session) {
     snap = list(),
     interval_report = NULL,
     interval_month_keys = NULL,
+    irep_include_bonus = TRUE,
     tid_task_lookup = NULL,
     startup_backup_done = FALSE
   )
@@ -89,6 +90,11 @@ server <- function(input, output, session) {
     
     # NY: Mäklare dropdown i Kund-fliken
     updateSelectInput(session, "kund_fm_maklare", choices = rv$labels$makl$maklare_name)
+
+    # Intervallrapport: konsultfilter-dropdowns
+    irep_kons_choices <- setNames(rv$labels$kons$consultant_id, rv$labels$kons$consultant_name)
+    updateSelectInput(session, "irep_filter_one",  choices = irep_kons_choices)
+    updateSelectInput(session, "irep_filter_many", choices = irep_kons_choices)
 
     # Bonusrapportering: initialise static dropdowns on load.
     # bon_rapporterande is filtered for the default type (Gruppbonus).
@@ -336,10 +342,18 @@ server <- function(input, output, session) {
       return()
     }
 
-    rv$interval_report <- build_interval_report(
-      rv$wb, rv$labels, sy, sm, ey, em,
-      bonus_threshold = BONUS_THRESHOLD
+    consultant_filter <- switch(input$irep_filter_mode,
+      "one"  = { v <- input$irep_filter_one;  if (!is.null(v) && nzchar(v)) v else NULL },
+      "many" = { v <- input$irep_filter_many; if (length(v) > 0) v else NULL },
+      NULL  # "all"
     )
+
+    rv$interval_report          <- build_interval_report(
+      rv$wb, rv$labels, sy, sm, ey, em,
+      bonus_threshold   = BONUS_THRESHOLD,
+      consultant_filter = consultant_filter
+    )
+    rv$irep_include_bonus <- is.null(consultant_filter)
 
     # Register one pair of renderers per month key (YYYYMM string).
     # Using local() captures mk by value so each closure refers to its own month.
@@ -457,7 +471,7 @@ server <- function(input, output, session) {
     },
     content = function(file) {
       req(rv$interval_report)
-      writexl::write_xlsx(interval_report_workbook_list(rv$interval_report), path = file)
+      writexl::write_xlsx(interval_report_workbook_list(rv$interval_report, include_bonus = isTRUE(rv$irep_include_bonus)), path = file)
     }
   )
 
