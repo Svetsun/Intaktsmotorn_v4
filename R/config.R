@@ -14,6 +14,33 @@ PASSPHRASE <- Sys.getenv(
   "SHINYMANAGER_PASSPHRASE",
   unset = "Intaktsmotorn042026!"   # local dev fallback only
 )
+
+# On Posit Connect (or any deployment where credentials.sqlite is absent),
+# create the database automatically using passwords from environment variables.
+# Set ADMIN_PASSWORD, SVETLANA_PASSWORD, ROBERT_PASSWORD in Posit Connect's
+# Settings → Environment Variables before deploying.
+if (!file.exists(DB_PATH)) {
+  .creds <- data.frame(
+    user     = c("admin",           "svetlana",          "robert"),
+    password = c(
+      Sys.getenv("ADMIN_PASSWORD",    unset = "AdminTemp2026!"),
+      Sys.getenv("SVETLANA_PASSWORD", unset = "SvetlanaTemp2026!"),
+      Sys.getenv("ROBERT_PASSWORD",   unset = "RobertTemp2026!")
+    ),
+    name     = c("Administrator", "Svetlana", "Standardanv\u00e4ndare"),
+    role     = c("admin",         "admin",    "user"),
+    start    = as.Date(c("2026-01-01", "2026-01-01", "2026-01-01")),
+    expire   = as.Date(c("2099-12-31", "2099-12-31", "2099-12-31")),
+    admin    = c(TRUE, TRUE, FALSE),
+    stringsAsFactors = FALSE
+  )
+  shinymanager::create_db(
+    credentials_data = .creds,
+    sqlite_path      = DB_PATH,
+    passphrase       = PASSPHRASE
+  )
+  rm(.creds)
+}
 # --------------------------------------------------------------------------
 
 # Path to the Excel workbook used as the data store.
