@@ -23,9 +23,9 @@ if (!file.exists(DB_PATH)) {
   .creds <- data.frame(
     user     = c("admin",           "svetlana",          "robert"),
     password = c(
-      Sys.getenv("ADMIN_PASSWORD",    unset = "AdminTemp2026!"),
-      Sys.getenv("SVETLANA_PASSWORD", unset = "SvetlanaTemp2026!"),
-      Sys.getenv("ROBERT_PASSWORD",   unset = "RobertTemp2026!")
+      Sys.getenv("SHINYMANAGER_ADMIN_PASSWORD",    unset = "AdminTemp2026!"),
+      Sys.getenv("SHINYMANAGER_SVETLANA_PASSWORD", unset = "SvetlanaTemp2026!"),
+      Sys.getenv("SHINYMANAGER_ROBERT_PASSWORD",   unset = "RobertTemp2026!")
     ),
     name     = c("Administrator", "Svetlana", "Standardanv\u00e4ndare"),
     role     = c("admin",         "admin",    "user"),
