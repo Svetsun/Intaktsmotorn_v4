@@ -57,7 +57,7 @@ if (file.exists(DB_PATH)) {
 # ---------------------------------------------------------------------------
 credentials <- data.frame(
   user     = c("admin",           "svetlana",            "robert"),
-  password = c("Robann042026!",   "Robann042026!",    "Robann042026!"),
+  password = c("REPLACE_ME",      "REPLACE_ME",       "REPLACE_ME"),
   name     = c("Administrator",   "Svetlana",            "Standardanv\u00e4ndare"),
   role     = c("admin",           "admin",               "user"),
   start    = c(as.Date("2026-01-01"), as.Date("2026-01-01"), as.Date("2026-01-01")),
