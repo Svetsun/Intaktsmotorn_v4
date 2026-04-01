@@ -308,9 +308,36 @@ ui <- fluidPage(
     tabPanel(
       "Historik (read-only)",
       tabsetPanel(
-        tabPanel("GrundlonHistory", rhandsontable::rHandsontableOutput("hot_gl_hist")),
-        tabPanel("TimprisHistory", rhandsontable::rHandsontableOutput("hot_tp_hist")),
-        tabPanel("BonusHistory", rhandsontable::rHandsontableOutput("hot_bo_hist")),
+        tabPanel("GrundlonHistory",
+          h4("Filtrera efter Konsult"),
+          fluidRow(
+            column(3, selectInput("gl_filter_kons", "Konsult", choices = c("Alla" = ""))),
+            column(2, br(), actionButton("btn_filter_gl", "Filtrera", class = "btn-info")),
+            column(2, br(), actionButton("btn_clear_filter_gl", "Rensa filter", class = "btn-default"))
+          ),
+          tags$hr(),
+          rhandsontable::rHandsontableOutput("hot_gl_hist")
+        ),
+        tabPanel("TimprisHistory",
+          h4("Filtrera efter Konsult"),
+          fluidRow(
+            column(3, selectInput("tp_filter_kons", "Konsult", choices = c("Alla" = ""))),
+            column(2, br(), actionButton("btn_filter_tp", "Filtrera", class = "btn-info")),
+            column(2, br(), actionButton("btn_clear_filter_tp", "Rensa filter", class = "btn-default"))
+          ),
+          tags$hr(),
+          rhandsontable::rHandsontableOutput("hot_tp_hist")
+        ),
+        tabPanel("BonusHistory",
+          h4("Filtrera efter Konsult"),
+          fluidRow(
+            column(3, selectInput("bo_filter_kons", "Konsult", choices = c("Alla" = ""))),
+            column(2, br(), actionButton("btn_filter_bo", "Filtrera", class = "btn-info")),
+            column(2, br(), actionButton("btn_clear_filter_bo", "Rensa filter", class = "btn-default"))
+          ),
+          tags$hr(),
+          rhandsontable::rHandsontableOutput("hot_bo_hist")
+        ),
         tabPanel("GroupBonusHistory", rhandsontable::rHandsontableOutput("hot_gb_hist")),
         tabPanel("SalesBonusHistory", rhandsontable::rHandsontableOutput("hot_sb_hist"))
       )

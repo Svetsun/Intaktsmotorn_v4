@@ -52,7 +52,7 @@ ui <- secure_app(
   ),
   tags_bottom = tags$div(
     style = "text-align:center; padding:10px 0; font-size:12px; color:#aaa;",
-    paste0("\u00a9 ", format(Sys.Date(), "%Y"), " Roban")
+    paste0("\u00a9 ", format(Sys.Date(), "%Y"), " Robban")
   ),
   language = "se"
 )

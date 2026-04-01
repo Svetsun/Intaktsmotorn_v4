@@ -529,9 +529,44 @@ server <- function(input, output, session) {
     t[, c(front, setdiff(names(t), front)), drop = FALSE]
   }
   
-  output$hot_gl_hist <- rhandsontable::renderRHandsontable({ req(rv$wb, rv$labels); hot_with_date_cols(hist_view_with_names(rv$wb[["GrundlonHistory"]], rv$labels) |> coerce_dates(c("created_at")), c("created_at"), read_only = TRUE) })
-  output$hot_tp_hist <- rhandsontable::renderRHandsontable({ req(rv$wb, rv$labels); hot_with_date_cols(hist_view_with_names(rv$wb[["TimprisHistory"]], rv$labels) |> coerce_dates(c("created_at")), c("created_at"), read_only = TRUE) })
-  output$hot_bo_hist <- rhandsontable::renderRHandsontable({ req(rv$wb, rv$labels); hot_with_date_cols(hist_view_with_names(rv$wb[["BonusHistory"]], rv$labels) |> coerce_dates(c("created_at")), c("created_at"), read_only = TRUE) })
+  # ---- History tab consultant filters ----
+  gl_kons_filter <- reactiveVal("")
+  tp_kons_filter <- reactiveVal("")
+  bo_kons_filter <- reactiveVal("")
+
+  observe({
+    req(rv$labels$kons)
+    choices <- c("Alla" = "", setNames(rv$labels$kons$consultant_name, rv$labels$kons$consultant_name))
+    updateSelectInput(session, "gl_filter_kons", choices = choices)
+    updateSelectInput(session, "tp_filter_kons", choices = choices)
+    updateSelectInput(session, "bo_filter_kons", choices = choices)
+  })
+
+  observeEvent(input$btn_filter_gl,       { gl_kons_filter(input$gl_filter_kons) })
+  observeEvent(input$btn_clear_filter_gl, { gl_kons_filter(""); updateSelectInput(session, "gl_filter_kons", selected = "") })
+  observeEvent(input$btn_filter_tp,       { tp_kons_filter(input$tp_filter_kons) })
+  observeEvent(input$btn_clear_filter_tp, { tp_kons_filter(""); updateSelectInput(session, "tp_filter_kons", selected = "") })
+  observeEvent(input$btn_filter_bo,       { bo_kons_filter(input$bo_filter_kons) })
+  observeEvent(input$btn_clear_filter_bo, { bo_kons_filter(""); updateSelectInput(session, "bo_filter_kons", selected = "") })
+
+  output$hot_gl_hist <- rhandsontable::renderRHandsontable({
+    req(rv$wb, rv$labels)
+    df <- hist_view_with_names(rv$wb[["GrundlonHistory"]], rv$labels) |> coerce_dates(c("created_at"))
+    if (nzchar(gl_kons_filter())) df <- df[!is.na(df$consultant_name) & df$consultant_name == gl_kons_filter(), ]
+    hot_with_date_cols(df, c("created_at"), read_only = TRUE)
+  })
+  output$hot_tp_hist <- rhandsontable::renderRHandsontable({
+    req(rv$wb, rv$labels)
+    df <- hist_view_with_names(rv$wb[["TimprisHistory"]], rv$labels) |> coerce_dates(c("created_at"))
+    if (nzchar(tp_kons_filter())) df <- df[!is.na(df$consultant_name) & df$consultant_name == tp_kons_filter(), ]
+    hot_with_date_cols(df, c("created_at"), read_only = TRUE)
+  })
+  output$hot_bo_hist <- rhandsontable::renderRHandsontable({
+    req(rv$wb, rv$labels)
+    df <- hist_view_with_names(rv$wb[["BonusHistory"]], rv$labels) |> coerce_dates(c("created_at"))
+    if (nzchar(bo_kons_filter())) df <- df[!is.na(df$consultant_name) & df$consultant_name == bo_kons_filter(), ]
+    hot_with_date_cols(df, c("created_at"), read_only = TRUE)
+  })
   output$hot_gb_hist <- rhandsontable::renderRHandsontable({ req(rv$wb, rv$labels); hot_with_date_cols(hist_view_with_names(rv$wb[["GroupBonusHistory"]], rv$labels) |> coerce_dates(c("created_at")), c("created_at"), read_only = TRUE) })
   output$hot_sb_hist <- rhandsontable::renderRHandsontable({ req(rv$wb, rv$labels); hot_with_date_cols(hist_view_with_names(rv$wb[["SalesBonusHistory"]], rv$labels) |> coerce_dates(c("created_at")), c("created_at"), read_only = TRUE) })
   
