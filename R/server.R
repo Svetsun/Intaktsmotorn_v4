@@ -266,7 +266,10 @@ server <- function(input, output, session) {
     df <- sanitize_nulls_df(rv$wb[["Uppdrag"]]) |>
       coerce_dates(c("startdatum", "slutdatum")) |>
       add_customer_name_to_uppdrag(rv$wb, rv$labels)
-    
+
+    if ("uppdrag_id" %in% names(df))
+      df <- df[order(-as.integer(sub(".*-(\\d+)$", "\\1", df$uppdrag_id)), na.last = TRUE), ]
+
     # Dölj i UI
     for (col in c("customer_id", "faktura_mottagare_id")) {
       if (col %in% names(df)) df[[col]] <- NULL
@@ -292,11 +295,7 @@ server <- function(input, output, session) {
     df <- ensure_cols(df, c("uppgift_name"), default = NA_character_)
     if ("uppgift_id" %in% names(df) && "uppgift_name" %in% names(df)) df <- df |> relocate(uppgift_name, .after = uppgift_id)
 
-    df <- df[order(
-      is.na(df$created_at),
-      desc(df$created_at),
-      desc(df$uppgift_id)
-    ), ]
+    df <- df[order(-as.integer(sub(".*-(\\d+)$", "\\1", df$uppgift_id)), na.last = TRUE), ]
 
     for (col in c("consultant_id","uppdrag_id","customer_id","slutdatum")) if (col %in% names(df)) df[[col]] <- NULL
 

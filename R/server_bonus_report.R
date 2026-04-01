@@ -404,6 +404,8 @@ register_bonus_report_handlers <- function(input, output, session, rv, persist_a
              bonus_procent, reported_hours, invoiced_amount, bonus_amount,
              created_at)
 
+    br_disp <- br_disp[order(-as.integer(sub(".*-(\\d+)$", "\\1", br_disp$bonus_rapport_id)), na.last = TRUE), ]
+
     hot_with_date_cols(br_disp,
                        c("start_date", "end_date", "created_at"),
                        read_only = TRUE)

@@ -222,10 +222,7 @@ ui <- fluidPage(
               selectInput("bon_bas_kons",
                           "Bas-konsult (vars timmar faktureras)",
                           choices = NULL),
-              helpText(
-                "S\u00e4ljbonus: kund anv\u00e4nds \u00e4ven f\u00f6r att sl\u00e5 upp aktiv bonus %.",
-                "Gruppbonus: kund anv\u00e4nds enbart f\u00f6r att navigera till uppdrag."
-              )
+              
             ),
             # --- Column 3: auto-calculated preview + register button ---
             column(
