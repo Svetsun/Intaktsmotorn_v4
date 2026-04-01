@@ -175,8 +175,19 @@ ui <- fluidPage(
             column(3, br(), actionButton("btn_add_tid", "Lägg till tid", class = "btn-primary"))
           ),
           tags$hr(),
-          fluidRow(column(8, offset = 8, actionButton("btn_save_tid", "Spara ändringar", class = "btn-success"))),
-          h4("Redigera tidrapportering (namn/uppdrag/kund/uppgift visas read-only)"),
+          h4("Filtrera efter Konsult"),
+          fluidRow(
+            column(3, selectInput("tid_filter_kons", "Konsult", choices = c("Alla" = ""))),
+            column(2, br(), actionButton("btn_filter_tid", "Filtrera", class = "btn-info")),
+            column(2, br(), actionButton("btn_clear_filter_tid", "Rensa filter", class = "btn-default"))
+          ),
+          tags$hr(),
+          fluidRow(
+            column(9, h4("Redigera tidrapportering (namn/uppdrag/kund/uppgift visas read-only)",
+                         style = "margin-top:6px;")),
+            column(3, actionButton("btn_save_tid", "Spara ändringar", class = "btn-success pull-right"))
+          ),
+          br(),
           rhandsontable::rHandsontableOutput("hot_tid")
         ),
 

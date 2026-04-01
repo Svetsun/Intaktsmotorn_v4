@@ -305,22 +305,47 @@ server <- function(input, output, session) {
     h
   })
 
+  # ---- Tidrapportering consultant filter ----
+  tid_kons_filter <- reactiveVal("")
+
+  observe({
+    req(rv$labels$kons)
+    choices <- c("Alla" = "", setNames(
+      rv$labels$kons$consultant_name,
+      rv$labels$kons$consultant_name
+    ))
+    updateSelectInput(session, "tid_filter_kons", choices = choices)
+  })
+
+  observeEvent(input$btn_filter_tid, {
+    tid_kons_filter(input$tid_filter_kons)
+  })
+
+  observeEvent(input$btn_clear_filter_tid, {
+    tid_kons_filter("")
+    updateSelectInput(session, "tid_filter_kons", selected = "")
+  })
+
   output$hot_tid <- rhandsontable::renderRHandsontable({
     req(rv$wb, rv$labels)
     df <- sanitize_nulls_df(rv$wb[["Tidrapportering"]]) |>
       coerce_dates(c("startdatum","slutdatum","created_at")) |>
       add_display_cols_to_tidrapport(rv$wb, rv$labels)
-    
+
     df <- df[order(
       is.na(df$created_at),
       desc(df$created_at),
       desc(df$tidrapport_id)
     ), ]
 
+    if (nzchar(tid_kons_filter())) {
+      df <- df[!is.na(df$consultant_name) & df$consultant_name == tid_kons_filter(), ]
+    }
+
     df <- order_tid_cols_for_view(df)
-    
+
     for (cc in c("consultant_id","uppdrag_id","customer_id")) if (cc %in% names(df)) df[[cc]] <- NULL
-    
+
     h <- hot_with_date_cols(df, c("startdatum","slutdatum","created_at"))
     for (nm in intersect(c("consultant_name","uppdrag_label","customer_name","uppgift_name","created_at"), names(df))) h <- rhandsontable::hot_col(h, nm, readOnly = TRUE)
     h
