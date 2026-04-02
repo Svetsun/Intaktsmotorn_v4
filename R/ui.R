@@ -236,6 +236,13 @@ ui <- fluidPage(
             )
           ),
           tags$hr(),
+          h4("Filtrera efter Konsult"),
+          fluidRow(
+            column(3, selectInput("bon_filter_kons", "Konsult", choices = c("Alla" = ""))),
+            column(2, br(), actionButton("btn_filter_bon", "Filtrera", class = "btn-info")),
+            column(2, br(), actionButton("btn_clear_filter_bon", "Rensa filter", class = "btn-default"))
+          ),
+          tags$hr(),
           h4("Registrerade bonusrader (read-only)"),
           rhandsontable::rHandsontableOutput("hot_bonus_rapport")
         )

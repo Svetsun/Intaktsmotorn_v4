@@ -341,6 +341,18 @@ register_bonus_report_handlers <- function(input, output, session, rv, persist_a
     )
   })
 
+  # ---- Bonusrapportering consultant filter ----
+  bon_kons_filter <- reactiveVal("")
+
+  observe({
+    req(rv$labels$kons)
+    choices <- c("Alla" = "", setNames(rv$labels$kons$consultant_name, rv$labels$kons$consultant_name))
+    updateSelectInput(session, "bon_filter_kons", choices = choices)
+  })
+
+  observeEvent(input$btn_filter_bon,       { bon_kons_filter(input$bon_filter_kons) })
+  observeEvent(input$btn_clear_filter_bon, { bon_kons_filter(""); updateSelectInput(session, "bon_filter_kons", selected = "") })
+
   # ---- 8. Read-only table showing all registered bonus rows ----
   output$hot_bonus_rapport <- rhandsontable::renderRHandsontable({
     req(rv$wb, rv$labels)
@@ -405,6 +417,9 @@ register_bonus_report_handlers <- function(input, output, session, rv, persist_a
              created_at)
 
     br_disp <- br_disp[order(-as.integer(sub(".*-(\\d+)$", "\\1", br_disp$bonus_rapport_id)), na.last = TRUE), ]
+
+    if (nzchar(bon_kons_filter()))
+      br_disp <- br_disp[!is.na(br_disp$rapporterande_name) & br_disp$rapporterande_name == bon_kons_filter(), ]
 
     hot_with_date_cols(br_disp,
                        c("start_date", "end_date", "created_at"),
